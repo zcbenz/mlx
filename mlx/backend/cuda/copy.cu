@@ -109,6 +109,15 @@ void fill_gpu(const array& in, array& out, const Stream& s) {
   copy_contiguous(encoder, CopyType::Scalar, in, out, 0, 0);
 }
 
+void fill_zeros_gpu(array& out, Stream s) {
+  if (out.size() == 0) {
+    return;
+  }
+  auto& encoder = cu::get_command_encoder(s);
+  out.set_data(cu::malloc_async(out.nbytes(), encoder));
+  encoder.fill_zeros(gpu_ptr<void>(out), out.nbytes());
+}
+
 void reshape_gpu(const array& in, array& out, Stream s) {
   auto [copy_necessary, out_strides] = prepare_reshape(in, out);
   if (copy_necessary) {

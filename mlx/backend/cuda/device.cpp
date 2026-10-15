@@ -459,6 +459,22 @@ void CommandEncoder::add_graph_node(
   insert_graph_dependencies(GraphNode{node, subgraph_key});
 }
 
+void CommandEncoder::fill_zeros(void* ptr, size_t nbytes) {
+  if (!use_cuda_graphs()) {
+    CHECK_CUDA_ERROR(cudaMemsetAsync(ptr, 0, nbytes, stream()));
+    return;
+  }
+  cudaMemsetParams params = {};
+  params.dst = ptr;
+  params.elementSize = 1;
+  params.height = 1;
+  params.value = 0;
+  params.width = nbytes;
+  cudaGraphNode_t node;
+  CHECK_CUDA_ERROR(cudaGraphAddMemsetNode(&node, graph_, NULL, 0, &params));
+  insert_graph_dependencies(GraphNode{node, "M"});
+}
+
 bool CommandEncoder::needs_commit() {
   return (node_count_ > max_ops_per_graph_) ||
       ((bytes_in_graph_ >> 20) > max_mb_per_graph_);

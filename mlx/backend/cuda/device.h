@@ -105,6 +105,8 @@ class MLX_API CommandEncoder {
       const std::string& subgraph_key,
       bool is_updatable);
 
+  void fill_zeros(void* ptr, size_t nbytes);
+
   void add_temporary(const array& arr) {
     temporaries_.push_back(arr.data_shared_ptr());
   }
@@ -132,6 +134,7 @@ class MLX_API CommandEncoder {
     cudaGraphNode_t node;
     // K = kernel
     // E = empty
+    // M = memset
     // () = subgraph (with metadata)
     // Symbols ':', '-' are reserved as separators
     std::string node_type;

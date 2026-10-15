@@ -44,6 +44,9 @@ void copy_gpu_inplace(
 // Fill the output with the scalar val
 void fill_gpu(const array& val, array& out, const Stream& s);
 
+// Fill output with zeros.
+void fill_zeros_gpu(array& out, Stream s);
+
 // Return a contiguous array with same shape that copies the data of |arr|.
 array contiguous_copy_gpu(const array& arr, const Stream& s);
 

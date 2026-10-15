@@ -150,9 +150,7 @@ void Matmul::eval_gpu(const std::vector<array>& inputs, array& out) {
   auto& b_pre = inputs[1];
   // Return 0s if either input is empty.
   if (a_pre.size() == 0 || b_pre.size() == 0) {
-    array zero(0, a_pre.dtype());
-    encoder.add_temporary(zero);
-    fill_gpu(zero, out, s);
+    fill_zeros_gpu(out, s);
     return;
   }
 
@@ -185,9 +183,7 @@ void BlockMaskedMM::eval_gpu(const std::vector<array>& inputs, array& out) {
 
   // Return 0s if either input is empty.
   if (a_pre.size() == 0 || b_pre.size() == 0) {
-    array zero(0, a_pre.dtype());
-    encoder.add_temporary(zero);
-    fill_gpu(zero, out, s);
+    fill_zeros_gpu(out, s);
     return;
   }
 
@@ -199,9 +195,7 @@ void BlockMaskedMM::eval_gpu(const std::vector<array>& inputs, array& out) {
     return;
   }
   if (K == 0) {
-    array zero(0, a_pre.dtype());
-    encoder.add_temporary(zero);
-    fill_gpu(zero, out, s);
+    fill_zeros_gpu(out, s);
     return;
   }
 
@@ -376,9 +370,7 @@ void GatherMM::eval_gpu(const std::vector<array>& inputs, array& out) {
 
   // Return 0s if the output or either input is empty.
   if (out.size() == 0 || a_pre.size() == 0 || b_pre.size() == 0) {
-    array zero(0, a_pre.dtype());
-    encoder.add_temporary(zero);
-    fill_gpu(zero, out, s);
+    fill_zeros_gpu(out, s);
     return;
   }
 
@@ -437,9 +429,7 @@ void SegmentedMM::eval_gpu(const std::vector<array>& inputs, array& out) {
 
   // Return zeros if output is empty or either input is empty.
   if (out.size() == 0 || a_pre.size() == 0 || b_pre.size() == 0) {
-    array zero(0, a_pre.dtype());
-    encoder.add_temporary(zero);
-    fill_gpu(zero, out, s);
+    fill_zeros_gpu(out, s);
     return;
   }
 
